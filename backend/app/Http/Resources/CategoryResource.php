@@ -14,6 +14,9 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
+            'products' => ProductResource::collection(
+                $this->whenLoaded('products')
+            ),
         ];
     }
 }
