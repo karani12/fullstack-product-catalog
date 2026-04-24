@@ -22,7 +22,7 @@ test('can view category with products', function () {
         ->has(Product::factory()->count(2))
         ->create();
 
-    $this->getJson("/api/v1/categories/{$category->id}")
+    $this->getJson("/api/v1/categories/{$category->slug}")
         ->assertOk()
         ->assertJsonStructure([
             'message',
@@ -37,7 +37,7 @@ test('can view category with products', function () {
 });
 
 test('returns 404 for non-existent category', function () {
-    $this->getJson('/api/v1/categories/999')
+    $this->getJson('/api/v1/categories/this-does-not-work')
         ->assertNotFound()
         ->assertJsonStructure(['message']);
 });
