@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReviewRequest;
 use App\Models\Review;
 use App\Services\ReviewService;
 use App\Http\Resources\ReviewResource;
@@ -16,6 +17,17 @@ class ReviewController extends Controller
     {
         return response()->api(
             ReviewResource::collection($this->service->list())
+        );
+    }
+
+    public function store(StoreReviewRequest $request)
+    {
+        $review = $this->service->create($request->validated());
+
+        return response()->api(
+            new ReviewResource($review),
+            'Review submitted successfully',
+            201
         );
     }
 

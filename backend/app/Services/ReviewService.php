@@ -13,6 +13,18 @@ class ReviewService
             ->paginate(10);
     }
 
+    public function create(array $data): Review
+    {
+        return Review::create([
+            'product_id'    => $data['product_id'],
+            'reviewer_name' => $data['reviewer_name'],
+            'email'         => $data['email'],
+            'rating'        => $data['rating'],
+            'body'          => $data['body'],
+            'is_approved'   => false,
+        ]);
+    }
+
     public function approve(Review $review): Review
     {
         $review->update([
