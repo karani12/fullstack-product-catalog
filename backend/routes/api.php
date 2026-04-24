@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 Route::prefix('v1')->group(function () {
+
     Route::post('login', [AuthController::class, 'login']);
     //PUBLIC
     Route::post('reviews', [ReviewController::class, 'store'])
@@ -19,12 +20,16 @@ Route::prefix('v1')->group(function () {
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
 
+
+    Route::get('products', [ProductController::class, 'index']);
+    Route::get('products/{product}', [ProductController::class, 'show']);
+
     Route::get('reviews', [ReviewController::class, 'index']);
 
     //PRIVATE
     Route::middleware('auth:sanctum')->group(function () {
 
-        Route::apiResource('products', ProductController::class);
+        Route::apiResource('products', ProductController::class)->only(['store', 'update', 'destroy']);
         Route::post('logout', [AuthController::class, 'logout']);
 
         Route::apiResource('categories', CategoryController::class)
