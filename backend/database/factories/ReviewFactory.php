@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,12 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'product_id' => Product::factory(),
+            'reviewer_name' => fake()->name(),
+            'email' => fake()->safeEmail(),
+            'rating' => fake()->numberBetween(1, 5),
+            'body' => fake()->sentence(),
+            'is_approved' => fake()->boolean(),
         ];
     }
 }
