@@ -24,13 +24,11 @@ class AuthController extends Controller
             );
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        $user = $request->user();
 
-        $token = $user->createToken('api-token')->plainTextToken;
-
-        return response()
-            ->api(null, 'Login successful')
-            ->header('Authorization', 'Bearer ' . $token);
+        return response()->api([
+            'token' => $user->createToken('api-token')->plainTextToken
+        ], 'Login successful');
     }
 
     public function logout(Request $request)
