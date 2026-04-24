@@ -3,47 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
-use Illuminate\Http\Request;
+use App\Services\ReviewService;
+use App\Http\Resources\ReviewResource;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        private ReviewService $service
+    ) {}
+
     public function index()
     {
-        //
+        return response()->api(
+            ReviewResource::collection($this->service->list())
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function approve(Review $review)
     {
-        //
+        return response()->api(
+            new ReviewResource($this->service->approve($review)),
+            'Review approved'
+        );
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Review $review)
+    public function reject(Review $review)
     {
-        //
+        return response()->api(
+            new ReviewResource($this->service->reject($review)),
+            'Review rejected'
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Review $review)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Review $review)
     {
-        //
+        $this->service->delete($review);
+
+        return response()->api(
+            null,
+            'Review deleted',
+            204
+        );
     }
 }
