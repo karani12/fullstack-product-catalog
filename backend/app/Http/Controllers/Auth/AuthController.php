@@ -15,6 +15,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
+
         if (!Auth::attempt($credentials)) {
             return response()->api(
                 null,
@@ -27,8 +28,14 @@ class AuthController extends Controller
         $user = $request->user();
 
         return response()->api([
-            'token' => $user->createToken('api-token')->plainTextToken
+            'token' => $user->createToken('api-token')->plainTextToken,
+            'user' => $user
         ], 'Login successful');
+    }
+
+    public function me(Request $request)
+    {
+        return response()->api($request->user());
     }
 
     public function logout(Request $request)
