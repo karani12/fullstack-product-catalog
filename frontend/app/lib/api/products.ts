@@ -10,7 +10,8 @@ export type ProductResponse = Product & {
 
 export function getProducts(page = 1, category?: string | null) {
   return apiFetch<ApiResponse<ProductResponse[]>>(
-    `/api/v1/products?page=${page}${category ? `&category=${category}` : ''}`
+    `/api/v1/products?page=${page}${category ? `&category=${category}` : ''}`,
+    {}
   )
 }
 
