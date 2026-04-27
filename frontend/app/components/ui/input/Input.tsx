@@ -17,7 +17,7 @@ export function Input({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm mb-1 text-gray-700">
+        <label className="block text-sm mb-1">
           {label}
         </label>
       )}
@@ -25,7 +25,7 @@ export function Input({
       <input
         {...registration}
         {...props}
-        className={`w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 ${className}`}
+        className={`w-full border border-input rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 ${className}`}
       />
 
       {error && (

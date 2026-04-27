@@ -38,33 +38,20 @@ export function ConfirmDialog({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/40"
-        onClick={onCancel}
-      />
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
 
       {/* dialog */}
-      <div className="relative z-10 w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
-        <h2 className="text-lg font-semibold text-gray-900">
-          {title}
-        </h2>
+      <div className="bg-card relative z-10 w-full max-w-sm rounded-xl  p-6 shadow-lg">
+        <h2 className="text-lg font-semibold">{title}</h2>
 
-        {description && (
-          <p className="mt-2 text-sm text-gray-600">
-            {description}
-          </p>
-        )}
+        {description && <p className="mt-2 text-sm">{description}</p>}
 
         <div className="mt-6 flex justify-end gap-2">
           <Button variant="ghost" onClick={onCancel}>
             {cancelText}
           </Button>
 
-          <Button
-            variant="danger"
-            onClick={onConfirm}
-            loading={loading}
-          >
+          <Button variant="danger" onClick={onConfirm} loading={loading}>
             {confirmText}
           </Button>
         </div>

@@ -16,12 +16,12 @@ type Props = SelectHTMLAttributes<HTMLSelectElement> & {
 export function Select({ registration, label, error, options, className = '', ...props }: Props) {
   return (
     <div>
-      {label && <label className="block text-sm text-gray-600 mb-1">{label}</label>}
+      {label && <label className="block text-sm mb-1">{label}</label>}
 
       <select
         {...registration}
         {...props}
-        className={`w-full border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 ${className}`}
+        className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 ${className}`}
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>

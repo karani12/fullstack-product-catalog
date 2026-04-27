@@ -1,5 +1,3 @@
-'use client'
-
 import { ReactNode } from 'react'
 
 interface Column<T> {
@@ -18,15 +16,16 @@ interface TableProps<T> {
 
 export default function Table<T>({ columns, data, keyExtractor }: TableProps<T>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-100">
-      <table className="min-w-full text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200">
+    <div className="w-full overflow-x-auto rounded-lg border">
+      <table className="w-full min-w-max text-sm">
+        <thead className="border-b bg-background">
           <tr>
             {columns.map((col) => (
               <th
                 key={String(col.key)}
-                className={`px-4 py-3 text-left font-medium text-gray-500 whitespace-nowrap ${col.sticky ? 'sticky left-0 z-10 bg-gray-50' : ''
-                  }`}
+                className={`px-4 py-3 text-left font-medium whitespace-nowrap bg-background ${
+                  col.sticky ? 'sticky left-0 z-10' : ''
+                }`}
               >
                 {col.label}
               </th>
@@ -34,10 +33,10 @@ export default function Table<T>({ columns, data, keyExtractor }: TableProps<T>)
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-gray-100 bg-white">
+        <tbody className="divide-y">
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-gray-400">
+              <td colSpan={columns.length} className="px-4 py-8 text-center">
                 No data
               </td>
             </tr>
@@ -46,12 +45,13 @@ export default function Table<T>({ columns, data, keyExtractor }: TableProps<T>)
               const id = (row as any).id
 
               return (
-                <tr key={keyExtractor(row)} className="hover:bg-gray-50 transition-colors">
+                <tr key={keyExtractor(row)} className="transition-colors">
                   {columns.map((col) => (
                     <td
                       key={String(col.key)}
-                      className={`px-4 py-3 text-gray-700 whitespace-nowrap ${col.sticky ? 'sticky left-0 z-10 bg-white' : ''
-                        }`}
+                      className={`px-4 py-3 whitespace-nowrap bg-background ${
+                        col.sticky ? 'sticky left-0 z-10' : ''
+                      }`}
                     >
                       {col.actions
                         ? col.actions({ row, id })

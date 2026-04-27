@@ -13,10 +13,10 @@ const base =
   'inline-flex items-center justify-center rounded transition disabled:opacity-50 disabled:cursor-not-allowed'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-gray-900 text-white hover:bg-gray-700',
-  secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-  ghost: 'bg-transparent text-gray-600 hover:text-gray-900',
-  danger: 'bg-red-600 text-white hover:bg-red-500',
+  primary: 'bg-primary text-secondary',
+  secondary: 'text-secondary',
+  ghost: 'bg-transparent text-primary',
+  danger: 'bg-destructive text-white hover:bg-red-500',
 }
 
 const sizes: Record<Size, string> = {
