@@ -24,6 +24,8 @@ return new class extends Migration
             $table->unsignedInteger('stock_qty')->default(0);
             $table->boolean('is_published')->default(false);
 
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }
