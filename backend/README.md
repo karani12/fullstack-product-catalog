@@ -1,59 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+### DUKA BACKEND
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This a laravel application that provides a **REST** api to Duka frontend. It handles authentication, authorization(surface level not policies or roles)
 
-## About Laravel
+## Tech stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.2+
+- Laravel 12 + (Laravel 13 is too new for me at the moment but will catchup soon)
+- Pest 3+(prefer this to phpuinit - I can use both)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP 8.2+
+- Composer 2.9.5
+- Enabled extensions for php(pdo_psql, php-redis  etc)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Set Up
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1) Configure URL in .env
 
-## Laravel Sponsors
+#### set up database
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=wfd
+DB_USERNAME=root
+DB_PASSWORD=password
 
-### Premium Partners
+#### setup cache store
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+CACHE_STORE=redis
 
-## Contributing
+### 2) Start the backend
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  ```bash
+  cd backend
+  composer install
+  cp .env.example .env
+  php artisan key:generate
+  php artisan migrate
+  php artisan db:seed
+  php artisan serve 
+```
+## Scripts
 
-## Code of Conduct
+### API
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  ### Auth
 
-## Security Vulnerabilities
+  - POST /api/v1/auth/login
+  - POST /api/v1/auth/logout (auth)
+  - GET /api/v1/auth/me (auth)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  ### Public
 
-## License
+  - GET /api/v1/products (published-only list; supports page and category query params)
+  - GET /api/v1/products/{product} (slug route key)
+  - GET /api/v1/categories
+  - GET /api/v1/categories/{category} (slug route key)
+  - POST /api/v1/reviews (rate-limited: throttle:5,1)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+  ### Admin (Sanctum token auth)
+  - GET/POST/PATCH/DELETE /api/v1/admin/products
+  - GET/PATCH/DELETE /api/v1/admin/reviews
+
+## Technical Decisions
+
+### Macros
+
+I used a macro in `AppServiceProvider` to build a nice and standardised api respponse body. This allows me to achieve a unified api response that is the same. 
+
+With this macro, i also changed the format and structure of errors by `FormRequests` by building a BaseRequest that returns 422 errors in the standard format.
+
+I also updated the errors default error messages to exceptions for 404 and 401 to follow the same standard format.
+
+### Services
+
+I opted for services in order to support controllers in a uniform way. For example I have `ProductController` and `AdminProdductController` which would basically fit in one controller.
+
+But to ensure that I follow DRY principles, I added a service layer to handle logic related tasks while the controller focuses on request and response ensuring that validations etc remain consistent.
+
+### Caching
+What advises Caching strategy is data volatility,performance, business , freshness etc.
+
+- For categories(list section), I opted for remember forever since its unchanging and the frontend is static.
+
+- For categories(show), I opted for 5 mins since the products under a category do not change that often.
+
+- For products(list), I opted for 1 min since the frontend revalidates and is the most volatile of the given data.(Also important since it provides pricing information etc)
+
+- For Products(show), I also opted for the same 1 min since there is revalidation after 60s and its also volatile.
+
+These are how I came up with the ttls.
+
+### Actions
+
+> Think you need another method? You really need another controller. Built *all* of Vapor like this. - [Taylor Otwell](https://x.com/taylorotwell/status/1651593413140287488)
+
+I decided to stick to the main functions of a controller instead of having actions for things like `publish`, `toggle` etc. This is because I always feel the same way, with form request and the patch method, alot of this functions just do updates. This is a strategy I follow but would love to hear counter arguments to it.
+
+
