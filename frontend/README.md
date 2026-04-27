@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### DUKA FRONTEND
 
-## Getting Started
+This a nextjs(App Router) project for a product catalog website. The main focus is of this frontend is to display products on the website and provide an admin interface to modify products.
 
-First, run the development server:
+## Tech stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16.2.4 (App Router)
+- React 19.2.4 + TypeScript
+- Tailwind CSS v4 - Styling ui components
+- TanStack React Query  - Client side data querying
+- React Hook Form + Zod validation
+
+## Requirements
+
+- Node.js (recommend Node 20+)
+- pnpm ()
+
+## Set Up
+
+### 1) Configure URL in .env
+
+- NEXT_PUBLIC_API_URL eg `http://127.0.0.1/8000
+
+### 2) Install dependencies
+
+- pnpm install
+
+### 3) Run Development Server
+
+- pnpm run dev
+- App runs on:http://localhost:3000
+
+## Scripts
+
+### Routes
+
+  - / — featured products
+  - /products - product listing (supports ?category=`<slug`>&page=`<n>`)
+  - /product/[slug] - List product and reviews
+  - /categories - categories listing
+  - /categories/[slug] - Lists category and its products
+  - /login - admin login
+  - /admin - admin products table
+  - /admin/reviews - admin reviews moderation
+
+
+## Querying Data
+
+We use two different strategies here. These are technical decisions based on how nextjs works.
+
+- We have `client_fetch` function that utilizes browser api to access stored access tokens. `app/lib/client_fetch.ts`
+
+- We also have `apiFetch` which works on the server side to make calls to the api. This includes revalidation at the fetch level set for categories. It can be broadened to be used to access servver side apis. `app/lib/utils.ts`
+
+These two reserve a globalised api response that is the same structure everywhere.
+
+```ts
+export type ApiResponse<T> = {
+  message: string
+  data: T
+  meta?: PaginationMeta
+  links?: Record<string, any>
+  errors?: Record<string, any[]>
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. React Query
+I have added react query which powers the `useReviews` and `useProducts` on top of the fetch lib functions in `app/lib/api`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This allows data fetching in a more robust way to handle request and also has a provider we can use to handle errors globally as done in `ReactQueryProvider` where I handle in a minimal way some global errors.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> we can improve the error handling to redirect etc on the client side but for now I just show a toast message.
 
-## Learn More
+### 2. Optimistic updates.
+With querying data comes the behaviour that is expected, I have opted to share the three ways I can do optimistic updates.
 
-To learn more about Next.js, take a look at the following resources:
+#### a) Use of toasts
+I have integrated `sonner` to be used to show toast updates on success. This has allowed on sucess, on error messages to be shared and flushed away.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### b) mutations.
+React query provides for mutation function that can help set data while the request runs in the background. While this may have pitfalls, I have shared an example in `useProduct` hook for the `togglePublish` functions. This does in place updates.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#### c) onSuccess appends.
+We can decide to invalidate cache in react query but a good way is when we perform a update/create function, we use react query to append the new item into the list on success without having to call the api. This can be shown in the `saveProduct` function.
 
-## Deploy on Vercel
+> This are some of the technical decisions I made on this level of the application that involve querying data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## UI
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+I have used shadcn before and I decided to borrow from that some of the principles I made to design a simple ui library. It follows a simple principle of keeping logic out of UI.
+
+The **dark mode and light mode** also are inspired by this to make it as customizable as possible in `gloabal.css` using tailwind`s theme.
+
+I made a few components that I used in the `components/ui` path that provides an idea into building ui components.
+
+>These are not production grade components, as we could improve for example the `table` component to be more robust by breaking it into more parts, provide more variants to buttons etc
+
+## AUTH
+
+I used browser cookies to setup a simple auth. It stores an auth token. Since the auth interacts with only client side code, I essentially developed an `AuthGuard` that i put it in the layout for admin pages. Another way would be using an AuthProvider that handles the auth. 
+
+It simply checks whether one is authenticated to access the admin side of the application.
+
+## Nextjs
+
+> very nice framework.
+
+For **SSG**, **SSR**, **CSR** and **ISR** might be where I spent most of the time. Some of the conecepts I have picked up include:
+
+- awaiting params(headache for a while)
+- directives are not meant to be put on every page
+- client side fetch and server side fetch may use different apis that are not available on both
+- It advises on ttl decsions based on what you chose depending on business decisions, data volatility and perf trade offs(very fast for SSG + ISR - instant page loads)
+
+
+
+
