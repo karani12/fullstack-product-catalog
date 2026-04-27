@@ -1,3 +1,4 @@
+import { getToken } from '@/app/lib/api/auth'
 import { ApiResponse } from '@/app/types/ApiResponse'
 
 export class ApiError<T = unknown> extends Error {
@@ -12,7 +13,7 @@ export class ApiError<T = unknown> extends Error {
 
 //fetching client side API since I need to access cookie using browser api hence the need for two client
 export async function clientFetch<T>(path: string, options: RequestInit = {}): Promise<T | void> {
-  const token = localStorage.getItem('auth_token')
+  const token = getToken()
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
     ...options,

@@ -1,31 +1,33 @@
-import { useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import { getMe, getToken, AuthUser } from '@/app/lib/api/auth'
+import { getMe, getToken, removeToken } from '@/app/lib/api/auth'
+import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export function useAuth() {
   const router = useRouter()
-  const pathname = usePathname()
-  const [user, setUser] = useState<AuthUser | null | undefined>(null)
-  const [loading, setLoading] = useState(true)
+  const token = getToken()
+
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['me'],
+    queryFn: getMe,
+    enabled: !!token,
+    retry: false,
+  })
 
   useEffect(() => {
-    const token = getToken()
-    if (!token) {
-      setLoading(false)
-
-      if (pathname !== '/login') router.replace('/login')
-      return
+    if (!token || error) {
+      removeToken()
+      router.replace('/login')
     }
+  }, [token, error])
 
-    getMe()
-      .then((res) => setUser(res?.data))
-      .catch(() => {
-        setUser(null)
-      })
-      .finally(() => setLoading(false))
-  }, [router])
-
-  const isAuthenticated = !!user
-
-  return { user, loading, isAuthenticated }
+  return {
+    user: user ?? null,
+    loading: isLoading,
+    isAuthenticated: !!user,
+  }
 }
