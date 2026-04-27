@@ -27,7 +27,8 @@ class AdminProductController extends Controller
         );
 
         return response()->api(
-            ProductResource::collection($products)
+            ProductResource::collection($products),
+            ttl: 60
         );
     }
 

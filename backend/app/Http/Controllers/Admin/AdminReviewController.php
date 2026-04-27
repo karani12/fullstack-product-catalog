@@ -17,7 +17,8 @@ class AdminReviewController extends Controller
     public function index()
     {
         return response()->api(
-            ReviewResource::collection($this->service->list())
+            ReviewResource::collection($this->service->list()),
+            ttl: 300
         );
     }
 

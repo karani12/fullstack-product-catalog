@@ -24,6 +24,7 @@ class ProductController extends Controller
 
         return response()->api(
             ProductResource::collection($products),
+            ttl: 60
         );
     }
 
@@ -32,7 +33,8 @@ class ProductController extends Controller
         $product = $this->service->find($product);
 
         return response()->api(
-            new ProductResource($product)
+            new ProductResource($product),
+            ttl: 60
         );
     }
 }

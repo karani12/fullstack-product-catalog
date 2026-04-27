@@ -21,7 +21,7 @@ class ReviewController extends Controller
         return response()->api(
             new ReviewResource($review),
             'Review submitted successfully',
-            201
+            status: 201
         );
     }
 }

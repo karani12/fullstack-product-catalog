@@ -15,14 +15,16 @@ class CategoryController extends Controller
     public function index()
     {
         return response()->api(
-            CategoryResource::collection($this->service->list())
+            CategoryResource::collection($this->service->list()),
+            ttl: 300
         );
     }
 
     public function show(Category $category)
     {
         return response()->api(
-            new CategoryResource($this->service->show($category))
+            new CategoryResource($this->service->show($category)),
+            ttl: 300
         );
     }
 }
