@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminReviewController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -25,20 +27,14 @@ Route::prefix('v1')->group(function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{product}', [ProductController::class, 'show']);
 
-    Route::get('reviews', [ReviewController::class, 'index']);
 
     //PRIVATE
     Route::prefix('admin')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
 
-            Route::apiResource('products', ProductController::class)->only(['store', 'update', 'destroy']);
+            Route::apiResource('products', AdminProductController::class);
 
-            Route::apiResource('categories', CategoryController::class)
-                ->only(['store', 'update', 'destroy']);
-
-            Route::delete('reviews/{review}', [ReviewController::class, 'destroy']);
-            Route::patch('reviews/{review}/approve', [ReviewController::class, 'approve']);
-            Route::patch('reviews/{review}/reject', [ReviewController::class, 'reject']);
+            Route::apiResource('reviews', AdminReviewController::class)->only(['index', 'update', 'destroy']);
         });
     });
 });
