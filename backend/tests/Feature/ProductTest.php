@@ -5,9 +5,6 @@ use App\Models\Category;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
-beforeEach(function () {
-    Sanctum::actingAs(User::factory()->create());
-});
 
 test('can list paginated products', function () {
     Product::factory()->count(15)->create();
@@ -37,7 +34,9 @@ test('can view a product', function () {
 test('can create product', function () {
     $category = Category::factory()->create();
 
-    $this->postJson('/api/v1/products', [
+    Sanctum::actingAs(User::factory()->create());
+
+    $this->postJson('/api/v1/admin/products', [
         'category_id' => $category->id,
         'name'        => 'Test Product',
         'price'       => 100,
@@ -52,7 +51,9 @@ test('can create product', function () {
 });
 
 test('cannot create product with invalid data', function () {
-    $this->postJson('/api/v1/products', [])
+
+    Sanctum::actingAs(User::factory()->create());
+    $this->postJson('/api/v1/admin/products', [])
         ->assertStatus(422)
         ->assertJsonStructure([
             'message',
@@ -63,7 +64,9 @@ test('cannot create product with invalid data', function () {
 test('can update product', function () {
     $product = Product::factory()->create();
 
-    $this->putJson("/api/v1/products/{$product->slug}", [
+    Sanctum::actingAs(User::factory()->create());
+
+    $this->putJson("/api/v1/admin/products/{$product->slug}", [
         'category_id' => $product->category_id,
         'name'        => 'Updated Name',
         'price'       => 200,
@@ -78,7 +81,9 @@ test('can update product', function () {
 test('can delete product', function () {
     $product = Product::factory()->create();
 
-    $this->deleteJson("/api/v1/products/{$product->slug}")
+    Sanctum::actingAs(User::factory()->create());
+
+    $this->deleteJson("/api/v1/admin/products/{$product->slug}")
         ->assertStatus(204);
 
     $this->assertDatabaseMissing('products', ['id' => $product->id]);

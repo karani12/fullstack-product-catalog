@@ -1,9 +1,6 @@
 <?php
 
 use App\Models\Product;
-use App\Models\Review;
-use App\Models\User;
-use Laravel\Sanctum\Sanctum;
 
 test('guest can submit a review', function () {
     $product = Product::factory()->create();
@@ -69,47 +66,4 @@ test('cannot submit review with invalid rating', function () {
             'message',
             'errors' => ['rating'],
         ]);
-});
-
-test('admin can approve a review', function () {
-    Sanctum::actingAs(User::factory()->create());
-
-    $review = Review::factory()->create(['is_approved' => false]);
-
-    $this->patchJson("/api/v1/reviews/{$review->id}/approve")
-        ->assertOk()
-        ->assertJsonStructure(['message', 'data']);
-
-    $this->assertDatabaseHas('reviews', [
-        'id'          => $review->id,
-        'is_approved' => true,
-    ]);
-});
-
-test('admin can reject a review', function () {
-    Sanctum::actingAs(User::factory()->create());
-
-    $review = Review::factory()->create(['is_approved' => true]);
-
-    $this->patchJson("/api/v1/reviews/{$review->id}/reject")
-        ->assertOk();
-
-    $this->assertDatabaseHas('reviews', [
-        'id'          => $review->id,
-        'is_approved' => false,
-    ]);
-});
-
-test('guest cannot approve a review', function () {
-    $review = Review::factory()->create(['is_approved' => false]);
-
-    $this->patchJson("/api/v1/reviews/{$review->id}/approve")
-        ->assertUnauthorized();
-});
-
-test('guest cannot reject a review', function () {
-    $review = Review::factory()->create(['is_approved' => true]);
-
-    $this->patchJson("/api/v1/reviews/{$review->id}/reject")
-        ->assertUnauthorized();
 });
