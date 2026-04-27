@@ -11,10 +11,12 @@ class ProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'category_id' => $this->category_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'reviews' => ReviewResource::collection(
                 $this->whenLoaded('reviews')
             ),
+            'average_rating' => $this->average_rating,
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,

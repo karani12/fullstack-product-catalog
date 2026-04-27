@@ -17,10 +17,11 @@ class ReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
+            'email' => $request->user() ? $this->email : null,
             'reviewer_name' => $this->reviewer_name,
             'rating' => $this->rating,
             'body' => $this->body,
-            'is_approved' => $this->is_approved,
+            'is_approved' => $request->user() ? $this->is_approved : null,
             'created_at' => $this->created_at,
         ];
     }
