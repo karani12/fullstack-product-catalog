@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import ThemeToggle from '@/app/components/ThemeSwitch'
 import ReactQueryProvider from '@/app/providers/ReactQueryProvider'
 import { Toaster } from 'sonner'
+import ThemeToggle from '@/app/components/ThemeToggle'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
