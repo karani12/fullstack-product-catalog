@@ -22,11 +22,12 @@ class UpdateReviewRequest extends BaseApiRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|exists:products,id',
-            'reviewer_name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'rating' => 'required|integer|between:1,5',
-            'body' => 'required|string',
+            'product_id'    => 'sometimes|exists:products,id',
+            'reviewer_name' => 'sometimes|string|max:255',
+            'email'         => 'sometimes|email',
+            'rating'        => 'sometimes|integer|between:1,5',
+            'body'          => 'sometimes|string',
+            'is_approved'   => 'sometimes|boolean',
         ];
     }
 }

@@ -22,10 +22,10 @@ class UpdateProductRequest extends BaseApiRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'category_id' => 'sometimes|exists:categories,id',
+            'name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'price' => 'sometimes|numeric|min:0',
             'stock_qty' => 'nullable|integer|min:0',
             'is_published' => 'sometimes|boolean',
         ];
