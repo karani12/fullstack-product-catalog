@@ -1,11 +1,10 @@
-import { getProducts, getProduct, ProductResponse } from "@/app/lib/api/products"
-import { notFound } from "next/navigation"
-import Link from "next/link"
-
-export const revalidate = 60
+import { getProducts, getProduct, ProductResponse } from '@/app/lib/api/products'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
+import ReviewCard from '@/app/components/ReviewCard'
 
 type PageParams = Promise<{ slug: string }>
-
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
     const res = await getProducts(1, null)
@@ -30,11 +29,35 @@ export default async function ProductPage({ params }: { params: PageParams }) {
   }
 
   return (
-    <div>
-      <Link href="/products">Back to Products</Link>
-      <h1>{product.name}</h1>
-      <p>{product.description}</p>
-      <p>${product.price}</p>
+    <div className="mx-auto pb-10 space-y-6">
+      <Link href="/products" className="inline-flex items-center gap-2 text-sm">
+        <ArrowLeftIcon className="w-4 h-4" />
+        Back to Products
+      </Link>
+
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{product.name}</h1>
+        <p className="text-2xl font-light">${product.price}</p>
+      </div>
+
+      <p className="leading-relaxed">{product.description}</p>
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-sm font-medium">Reviews</h2>
+          <div className="flex-1 h-px" />
+        </div>
+
+        {product?.reviews?.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {product.reviews.map((review: any) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm">No reviews yet.</p>
+        )}
+      </div>
     </div>
   )
 }

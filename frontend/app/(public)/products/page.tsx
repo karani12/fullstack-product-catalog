@@ -1,24 +1,48 @@
-import { getProducts } from "@/app/lib/api/products"
-import Link from "next/link"
+import ProductCard from '@/app/components/ProductCard'
+import CategoryFilter from '@/app/components/CategoryFilter'
+import { getCategories } from '@/app/lib/api/category'
+import { getProducts } from '@/app/lib/api/products'
+import Pagination from '@/app/components/Pagination'
 
-export const revalidate = 60
+interface Props {
+  searchParams: Promise<{
+    category?: string
+    page: number | undefined
+  }>
+}
 
-export default async function Products() {
-  const res = await getProducts(1, null)
-  const data = res.data ?? []
+export default async function Products({ searchParams }: Props) {
+  const { category, page } = await searchParams
+
+  const [productsRes, categoriesRes] = await Promise.all([
+    getProducts(page, category),
+    getCategories(),
+  ])
+
+  const products = productsRes.data ?? []
+  const categories = categoriesRes.data ?? []
 
   return (
-    <div>
-      <h1>Products</h1>
-      <ul>
-        {data.map((product) => (
-          <li key={product.id}>
-            <Link href={`/products/${product.slug}`}>
-              {product.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Products</h1>
+
+        <CategoryFilter categories={categories} />
+      </div>
+
+      {products.length === 0 ? (
+        <p className="text-sm">No products found.</p>
+      ) : (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          {/* @ts-ignore */}
+          <Pagination meta={productsRes.meta} />
+        </div>
+      )}
     </div>
   )
 }
