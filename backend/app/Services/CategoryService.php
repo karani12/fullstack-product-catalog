@@ -20,7 +20,7 @@ class CategoryService
             "categories.show.{$category->id}",
             300,
             function () use ($category) {
-                return $category->load('products');
+                return $category->load(['products' => fn($q) => $q->published()]);
             }
         );
     }

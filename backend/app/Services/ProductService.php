@@ -19,7 +19,7 @@ class ProductService
             fn() => Product::with('category')
                 ->when($publishedOnly, fn($q) => $q->published())
                 ->when($category, fn($q) => $q->whereHas('category', fn($q) => $q->where('slug', $category)))
-                ->paginate(5, ['*'], 'page', $page)
+                ->paginate(10, ['*'], 'page', $page)
         );
     }
 
