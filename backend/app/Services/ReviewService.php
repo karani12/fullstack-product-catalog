@@ -3,14 +3,20 @@
 namespace App\Services;
 
 use App\Models\Review;
+use Illuminate\Support\Facades\Cache;
 
 class ReviewService
 {
     public function list()
     {
-        return Review::with('product')
-            ->latest()
-            ->paginate(10);
+        return Cache::remember(
+            "reviews.all",
+            300,
+            fn() =>
+            Review::with('product')
+                ->latest()
+                ->paginate(10)
+        );
     }
 
     public function create(array $data): Review
@@ -25,26 +31,18 @@ class ReviewService
         ]);
     }
 
-    public function approve(Review $review): Review
+    public function update(Review $review, array $data): Review
     {
-        $review->update([
-            'is_approved' => true,
-        ]);
+        $review->update($data);
 
-        return $review;
-    }
-
-    public function reject(Review $review): Review
-    {
-        $review->update([
-            'is_approved' => false,
-        ]);
-
-        return $review;
+        Cache::forget('reviews.all');
+        return $review->refresh();
     }
 
     public function delete(Review $review): void
     {
+
+        Cache::forget('reviews.all');
         $review->delete();
     }
 }

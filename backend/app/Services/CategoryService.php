@@ -16,8 +16,9 @@ class CategoryService
 
     public function show(Category $category)
     {
-        return Cache::rememberForever(
+        return Cache::remember(
             "categories.show.{$category->id}",
+            300,
             function () use ($category) {
                 return $category->load('products');
             }
