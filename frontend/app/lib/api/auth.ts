@@ -1,15 +1,29 @@
 import { clientFetch } from '@/app/lib/client_fetch'
 
+export interface AuthUser {
+  id: number
+  name: string
+  email: string
+}
+
+const TOKEN_KEY = 'auth_token'
+const MAX_AGE = 60 * 60 * 24 * 7
+
 export function getToken(): string | null {
-  return localStorage.getItem('auth_token')
+  return (
+    document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${TOKEN_KEY}=`))
+      ?.split('=')[1] ?? null
+  )
 }
 
 export function setToken(token: string) {
-  localStorage.setItem('auth_token', token)
+  document.cookie = `${TOKEN_KEY}=${token}; Max-Age=${MAX_AGE}; path=/; SameSite=Strict`
 }
 
 export function removeToken() {
-  localStorage.removeItem('auth_token')
+  document.cookie = `${TOKEN_KEY}=; Max-Age=0; path=/`
 }
 
 export function login(payload: { email: string; password: string }) {
@@ -25,10 +39,4 @@ export function logout() {
 
 export function getMe() {
   return clientFetch<{ data: AuthUser }>('/api/v1/auth/me')
-}
-
-export interface AuthUser {
-  id: number
-  name: string
-  email: string
 }
