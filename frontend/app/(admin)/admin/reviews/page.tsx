@@ -31,6 +31,11 @@ export default function AdminReviewsPage() {
               render: (r) => <span className="line-clamp-2">{r.body}</span>,
             },
             {
+              key: 'product',
+              label: 'Product',
+              render: (r) => <span className="line-clamp-2">{r.product?.name ?? '-'}</span>,
+            },
+            {
               key: 'is_approved',
               label: 'Approved',
               render: (r) => (
