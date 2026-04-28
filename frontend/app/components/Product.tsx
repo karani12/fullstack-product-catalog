@@ -15,13 +15,13 @@ import { Dialog } from '@/app/components/ui/dialog/Dialog'
 import { DialogHeader, DialogContent, DialogFooter } from '@/app/components/ui/dialog/DialogParts'
 import { useProducts } from '@/app/lib/hooks/useProduct'
 import { toast } from 'sonner'
-import { ApiError } from '@/app/lib/client_fetch'
 
 const productSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   price: z.string().min(1, 'Price is required'),
   description: z.string().nullable(),
   category_id: z.number('Category is required'),
+  stock_qty: z.coerce.number().nullable(),
 })
 
 type ProductFormData = z.infer<typeof productSchema>
@@ -49,6 +49,7 @@ export default function ProductModal({ product, onSaved, trigger }: Props) {
     reset,
     formState: { errors },
   } = useForm<ProductFormData>({
+    //@ts-ignore
     resolver: zodResolver(productSchema),
     values: product
       ? {
@@ -56,8 +57,9 @@ export default function ProductModal({ product, onSaved, trigger }: Props) {
           price: product.price,
           description: product.description ?? '',
           category_id: product.category_id,
+          stock_qty: product.stock_qty ?? '',
         }
-      : { name: '', price: '', description: '', category_id: 0 },
+      : { name: '', price: '', description: '', category_id: 0, stock_qty: 0 },
   })
 
   const { saveProduct } = useProducts()
@@ -112,8 +114,17 @@ export default function ProductModal({ product, onSaved, trigger }: Props) {
               label="Price"
               type="number"
               step="0.01"
+              min="0"
               registration={register('price')}
               error={errors.price?.message}
+            />
+            <Input
+              label="Stock Quantity"
+              type="number"
+              step="0.01"
+              min="0"
+              registration={register('stock_qty')}
+              error={errors.stock_qty?.message}
             />
             <Textarea
               label="Description"
