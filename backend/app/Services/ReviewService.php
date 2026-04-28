@@ -32,10 +32,9 @@ class ReviewService
 
     public function update(Review $review, array $data): Review
     {
-        $review->update($data);
 
         Cache::forget('reviews.all');
-
+        $review->update($data);
         return $review->refresh();
     }
 

@@ -17,6 +17,9 @@ class ReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
+            'product' => new ProductResource(
+                $this->whenLoaded('product')
+            ),
             'email' => $request->user() ? $this->email : null,
             'reviewer_name' => $this->reviewer_name,
             'rating' => $this->rating,
