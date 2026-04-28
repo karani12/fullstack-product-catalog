@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import ReviewCard from '@/app/components/ReviewCard'
 import ReviewForm from '@/app/components/ReviewForm'
 import { Review } from '@/src/db/schema'
+import { Rating } from '@/app/components/ui/rating/Rating'
 
 type PageParams = Promise<{ slug: string }>
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -39,6 +40,7 @@ export default async function ProductPage({ params }: { params: PageParams }) {
 
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">{product.name}</h1>
+        <Rating rating={product.average_rating} />
         <p className="text-2xl font-light">${product.price}</p>
       </div>
 
