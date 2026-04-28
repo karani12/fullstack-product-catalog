@@ -44,6 +44,10 @@ CACHE_STORE=redis
   php artisan serve 
 ```
 ## Scripts
+```
+php artisan test
+composer pint
+```
 
 ### API
 
