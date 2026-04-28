@@ -23,6 +23,10 @@ This a laravel application that provides a **REST** api to Duka frontend. It han
 
 #### set up database
 ```
+cd backend
+composer install
+cp .env.example .env
+
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
@@ -36,11 +40,7 @@ CACHE_STORE=redis
 ```
 
 ### 2) Start the backend
-
   ```bash
-  cd backend
-  composer install
-  cp .env.example .env
   php artisan key:generate
   php artisan migrate
   php artisan db:seed
