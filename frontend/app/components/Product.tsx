@@ -72,6 +72,8 @@ export default function ProductModal({ product, trigger }: Props) {
           reset()
           setOpen(false)
         },
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (err: any) => {
           if (err?.status === 422 && err?.response?.errors) {
             applyServerErrors(err.response.errors, setError, Object.keys(schema.shape))

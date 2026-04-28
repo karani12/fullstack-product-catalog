@@ -30,8 +30,6 @@ This a nextjs(App Router) project for a product catalog website. The main focus 
 - pnpm run dev
 - App runs on:http://localhost:3000
 
-## Scripts
-
 ### Routes
 
   - / — featured products
