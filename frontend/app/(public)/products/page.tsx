@@ -3,6 +3,7 @@ import CategoryFilter from '@/app/components/CategoryFilter'
 import { getCategories } from '@/app/lib/api/category'
 import { getProducts } from '@/app/lib/api/products'
 import Pagination from '@/app/components/Pagination'
+import { PaginationMeta } from '@/app/types/ApiResponse'
 
 interface Props {
   searchParams: Promise<{
@@ -39,8 +40,7 @@ export default async function Products({ searchParams }: Props) {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          {/* @ts-ignore */}
-          <Pagination meta={productsRes.meta} />
+          <Pagination meta={productsRes.meta as PaginationMeta} />
         </div>
       )}
     </div>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import ReviewCard from '@/app/components/ReviewCard'
 import ReviewForm from '@/app/components/ReviewForm'
+import { Review } from '@/src/db/schema'
 
 type PageParams = Promise<{ slug: string }>
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -51,7 +52,7 @@ export default async function ProductPage({ params }: { params: PageParams }) {
 
         {product?.reviews?.length ? (
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {product.reviews.map((review: any) => (
+            {product.reviews.map((review: Review) => (
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>

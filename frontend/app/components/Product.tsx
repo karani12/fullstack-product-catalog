@@ -26,7 +26,7 @@ const schema = z.object({
   stock_qty: z.coerce.number().optional(),
 })
 
-type FormData = z.infer<typeof schema>
+export type FormData = z.infer<typeof schema>
 
 interface Props {
   product?: ProductResponse

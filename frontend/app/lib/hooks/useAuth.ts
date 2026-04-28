@@ -26,7 +26,7 @@ export function useAuth() {
       removeToken()
       router.replace('/login')
     }
-  }, [token, error, isLoading])
+  }, [token, error, isLoading, router])
 
   return {
     user: user ?? null,

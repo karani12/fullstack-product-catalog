@@ -2,7 +2,10 @@ export type ApiResponse<T> = {
   message: string
   data: T
   meta?: PaginationMeta
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   links?: Record<string, any>
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errors?: Record<string, any[]>
 }
 

@@ -1,15 +1,17 @@
 'use client'
+import { useSyncExternalStore } from 'react'
 import { Spinner } from '@/app/components/ui/spinner/Spinner'
 import { useAuth } from '@/app/lib/hooks/useAuth'
-import { useEffect, useState } from 'react'
+
+const subscribe = () => () => {}
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false)
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  )
   const { user, loading } = useAuth()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   if (!mounted || loading || !user) {
     return (

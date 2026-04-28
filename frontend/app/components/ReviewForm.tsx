@@ -46,6 +46,7 @@ export default function ReviewForm({ productId }: { productId: number }) {
       })
       setSubmitted(true)
       toast.success('Review submitted! It will appear after approval.')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.status === 422 && e?.response?.errors) {
         applyServerErrors(e.response.errors, setError)
