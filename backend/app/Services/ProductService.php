@@ -9,18 +9,17 @@ class ProductService
 {
     public function list(int $page = 1, bool $publishedOnly = false, ?string $category = null)
     {
-        $key = $publishedOnly
-            ? "products.published.page.{$page}.{$category}"
-            : "products.all.page.{$page}";
+        $query = Product::with('category')
+            ->when($publishedOnly, fn($q) => $q->published())
+            ->when($category, fn($q) => $q->whereHas('category', fn($q) => $q->where('slug', $category)));
 
-        return Cache::remember(
-            $key,
-            60,
-            fn () => Product::with('category')
-                ->when($publishedOnly, fn ($q) => $q->published())
-                ->when($category, fn ($q) => $q->whereHas('category', fn ($q) => $q->where('slug', $category)))
-                ->paginate(10, ['*'], 'page', $page)
-        );
+        if ($publishedOnly) {
+            $key = "products.published.page.{$page}.{$category}";
+            return Cache::remember($key, 60, fn() => $query->paginate(10, ['*'], 'page', $page));
+        }
+
+        $key = "products.all.{$category}";
+        return Cache::remember($key, 60, fn() => $query->get());
     }
 
     public function find(Product $product)
@@ -28,9 +27,9 @@ class ProductService
         return Cache::remember(
             "products.detail.{$product->slug}",
             300,
-            fn () => $product->load([
+            fn() => $product->load([
                 'category',
-                'reviews' => fn ($q) => $q->where('is_approved', true),
+                'reviews' => fn($q) => $q->where('is_approved', true),
             ])
         );
     }

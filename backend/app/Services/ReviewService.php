@@ -12,9 +12,9 @@ class ReviewService
         return Cache::remember(
             'reviews.all',
             300,
-            fn () => Review::with('product')
+            fn() => Review::with('product')
                 ->latest()
-                ->paginate(10)
+                ->get()
         );
     }
 
