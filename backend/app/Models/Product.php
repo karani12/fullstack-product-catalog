@@ -48,7 +48,7 @@ class Product extends Model
 
     public function getAverageRatingAttribute(): float
     {
-        return round($this->reviews()->avg('rating') ?? 0, 1);
+        return round($this->reviews()->where('is_approved', true)->avg('rating') ?? 0, 1);
     }
 
     public function category(): BelongsTo
