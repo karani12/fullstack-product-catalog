@@ -18,8 +18,9 @@ This a nextjs(App Router) project for a product catalog website. The main focus 
 ## Set Up
 
 ### 1) Configure URL in .env
-
-- NEXT_PUBLIC_API_URL eg `http://127.0.0.1/8000
+```
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+```
 
 ### 2) Install dependencies
 
