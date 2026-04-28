@@ -17,19 +17,18 @@ export function Select({ registration, label, error, options, className = '', ..
   return (
     <div>
       {label && <label className="block text-sm mb-1">{label}</label>}
-
       <select
         {...registration}
         {...props}
         className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 ${className}`}
       >
+        <option value="">Select {label}</option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}
       </select>
-
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
     </div>
   )
