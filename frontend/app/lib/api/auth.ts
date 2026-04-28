@@ -10,6 +10,7 @@ const TOKEN_KEY = 'auth_token'
 const MAX_AGE = 60 * 60 * 24 * 7
 
 export function getToken(): string | null {
+  if (typeof window === 'undefined') return null
   return (
     document.cookie
       .split('; ')
