@@ -32,16 +32,16 @@ class AppServiceProvider extends ServiceProvider
                 $payload = $data->response()->getData(true);
                 $body = [
                     'message' => $message,
-                    'data'    => $payload['data'],
-                    'meta'    => $payload['meta'] ?? [],
-                    'links'   => $payload['links'] ?? [],
-                    'errors'  => $errors,
+                    'data' => $payload['data'],
+                    'meta' => $payload['meta'] ?? [],
+                    'links' => $payload['links'] ?? [],
+                    'errors' => $errors,
                 ];
             } else {
                 $body = [
                     'message' => $message,
-                    'data'    => $data,
-                    'errors'  => $errors,
+                    'data' => $data,
+                    'errors' => $errors,
                 ];
             }
 

@@ -9,7 +9,7 @@ test('user can login and receive token', function () {
     ]);
 
     $this->postJson('/api/v1/auth/login', [
-        'email'    => $user->email,
+        'email' => $user->email,
         'password' => 'password',
     ])
         ->assertOk()
@@ -34,7 +34,7 @@ test('user cannot login with invalid credentials', function () {
     ]);
 
     $this->postJson('/api/v1/auth/login', [
-        'email'    => $user->email,
+        'email' => $user->email,
         'password' => 'wrongpassword',
     ])
         ->assertStatus(401);

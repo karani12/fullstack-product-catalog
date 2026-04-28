@@ -2,21 +2,24 @@
 
 namespace App\IDE;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\ResponseFactory;
+
 /**
- * @mixin \Illuminate\Routing\ResponseFactory
- * @mixin \Illuminate\Http\Response
+ * @mixin ResponseFactory
+ * @mixin Response
  */
 class ResponseMacros
 {
     /**
      * Send a standardized JSON API response.
      *
-     * @param  mixed                  $data     Payload (model, array, ResourceCollection…)
-     * @param  string                 $message  Human-readable status message
-     * @param  int                    $status   HTTP status code
-     * @param  array                  $errors   Validation / domain errors
-     * @param  int                    $ttl      Cache max-age in seconds (GET only)
-     * @return \Illuminate\Http\JsonResponse
+     * @param  mixed  $data  Payload (model, array, ResourceCollection…)
+     * @param  string  $message  Human-readable status message
+     * @param  int  $status  HTTP status code
+     * @param  array  $errors  Validation / domain errors
+     * @param  int  $ttl  Cache max-age in seconds (GET only)
      */
     public function api(
         mixed $data = null,
@@ -24,7 +27,7 @@ class ResponseMacros
         int $status = 200,
         array $errors = [],
         int $ttl = 60
-    ): \Illuminate\Http\JsonResponse {
+    ): JsonResponse {
         throw new \RuntimeException('Macro not registered.');
     }
 }

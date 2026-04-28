@@ -12,11 +12,10 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return response()->api(
                 null,
                 'Invalid credentials',
@@ -29,7 +28,7 @@ class AuthController extends Controller
 
         return response()->api([
             'token' => $user->createToken('api-token')->plainTextToken,
-            'user' => $user
+            'user' => $user,
         ], 'Login successful');
     }
 

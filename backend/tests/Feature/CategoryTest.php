@@ -11,7 +11,7 @@ test('can list categories', function () {
         ->assertJsonStructure([
             'message',
             'data' => [
-                '*' => ['id', 'name']
+                '*' => ['id', 'name'],
             ],
         ])
         ->assertJsonCount(3, 'data');
@@ -30,7 +30,7 @@ test('can view category with products', function () {
                 'id',
                 'name',
                 'products' => [
-                    '*' => ['id', 'name', 'price']
+                    '*' => ['id', 'name', 'price'],
                 ],
             ],
         ]);

@@ -16,19 +16,17 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me'])->middleware('auth:sanctum');
     });
 
-    //PUBLIC
+    // PUBLIC
     Route::post('reviews', [ReviewController::class, 'store'])
         ->middleware('throttle:5,1');
 
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
 
-
     Route::get('products', [ProductController::class, 'index']);
     Route::get('products/{product}', [ProductController::class, 'show']);
 
-
-    //PRIVATE
+    // PRIVATE
     Route::prefix('admin')->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
 

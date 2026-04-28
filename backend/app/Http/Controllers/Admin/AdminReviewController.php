@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateReviewRequest;
+use App\Http\Resources\ReviewResource;
 use App\Models\Review;
 use App\Services\ReviewService;
-use App\Http\Resources\ReviewResource;
 
 class AdminReviewController extends Controller
 {

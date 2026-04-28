@@ -16,9 +16,9 @@ class ProductService
         return Cache::remember(
             $key,
             60,
-            fn() => Product::with('category')
-                ->when($publishedOnly, fn($q) => $q->published())
-                ->when($category, fn($q) => $q->whereHas('category', fn($q) => $q->where('slug', $category)))
+            fn () => Product::with('category')
+                ->when($publishedOnly, fn ($q) => $q->published())
+                ->when($category, fn ($q) => $q->whereHas('category', fn ($q) => $q->where('slug', $category)))
                 ->paginate(10, ['*'], 'page', $page)
         );
     }
@@ -28,9 +28,9 @@ class ProductService
         return Cache::remember(
             "products.detail.{$product->slug}",
             300,
-            fn() => $product->load([
+            fn () => $product->load([
                 'category',
-                'reviews' => fn($q) => $q->where('is_approved', true),
+                'reviews' => fn ($q) => $q->where('is_approved', true),
             ])
         );
     }
@@ -40,8 +40,8 @@ class ProductService
         $product = Product::create($data);
         $product->load('category');
 
-        Cache::forget("products.all.page.1");
-        Cache::forget("products.published.page.1");
+        Cache::forget('products.all.page.1');
+        Cache::forget('products.published.page.1');
 
         return $product;
     }
@@ -49,8 +49,8 @@ class ProductService
     public function update(Product $product, array $data): Product
     {
         $product->update($data);
-        Cache::forget("products.all.page.1");
-        Cache::forget("products.published.page.1");
+        Cache::forget('products.all.page.1');
+        Cache::forget('products.published.page.1');
         Cache::forget("products.detail.{$product->slug}");
 
         return $product;
@@ -58,8 +58,8 @@ class ProductService
 
     public function delete(Product $product): void
     {
-        Cache::forget("products.all.page.1");
-        Cache::forget("products.published.page.1");
+        Cache::forget('products.all.page.1');
+        Cache::forget('products.published.page.1');
         Cache::forget("products.detail.{$product->slug}");
         $product->delete();
     }
