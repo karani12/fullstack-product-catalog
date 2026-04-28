@@ -50,7 +50,7 @@ CACHE_STORE=redis
 The seeded admin user is 
 
 ```
-email: testuser@example.com
+email: test@example.com
 password: password
 ```
 
