@@ -51,9 +51,6 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ReactQueryProvider>
-        <div className="sticky  bottom-2.5 w-full mx-auto flex items-center justify-center">
-          <ThemeToggle />
-        </div>
       </body>
     </html>
   )

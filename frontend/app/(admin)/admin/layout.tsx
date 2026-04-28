@@ -6,6 +6,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { removeToken } from '@/app/lib/api/auth'
 import { useQueryClient } from '@tanstack/react-query'
+import ThemeToggle from '@/app/components/ThemeToggle'
+import { Button } from '@/app/components/ui/button/Button'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -32,7 +34,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <aside
           className={`fixed lg:static inset-y-0 left-0 z-20 w-52 bg-card  border-r flex flex-col transition-transform duration-200 ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
         >
-          <div className="p-4 font-bold text-lg border-b">Admin</div>
+          <div className="p-4 font-bold text-lg border-b flex items-center">
+            Admin
+            <ThemeToggle />
+          </div>
           <nav className="flex-1 p-3 space-y-1">
             {[
               { label: 'Products', href: '/admin' },
@@ -53,12 +58,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </Link>
               )
             })}
-          </nav>
-          <div className="p-3 border-t">
-            <button onClick={handleLogout} className="w-full px-3 py-2 rounded text-sm text-left">
+            <Button variant="ghost" onClick={handleLogout}>
               Logout
-            </button>
-          </div>
+            </Button>
+          </nav>
+          <div className="p-3 border-t"></div>
         </aside>
 
         <div className="flex-1 flex flex-col min-w-0">

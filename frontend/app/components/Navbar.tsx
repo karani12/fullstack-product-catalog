@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/app/components/ui/button/Button'
+import ThemeToggle from '@/app/components/ThemeToggle'
 
 const links = [
   { href: '/products', label: 'Products' },
@@ -20,7 +21,7 @@ export default function Navbar() {
         <div className="font-semibold">Duka</div>
       </Link>
 
-      <nav className="hidden md:flex gap-6 text-sm">
+      <nav className="hidden md:flex items-center gap-6 text-sm">
         {links.map((link) => (
           <Link
             key={link.href}
@@ -30,6 +31,8 @@ export default function Navbar() {
             {link.label}
           </Link>
         ))}
+
+        <ThemeToggle />
       </nav>
 
       <Button
@@ -67,6 +70,8 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            <ThemeToggle />
           </nav>
         </div>
       )}
