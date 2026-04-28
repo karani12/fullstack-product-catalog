@@ -1,38 +1,39 @@
-import { useQuery } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+'use client'
 import { useState } from 'react'
+import { Resolver, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
+import { toast } from 'sonner'
 
 import { ProductResponse } from '@/app/lib/api/products'
 import { clientGetCategories } from '@/app/lib/api/category'
+import { useProducts } from '@/app/lib/hooks/useProduct'
 
 import { Input } from '@/app/components/ui/input/Input'
 import { Textarea } from '@/app/components/ui/textarea/TextArea'
 import { Select } from '@/app/components/ui/select/Select'
 import { Button } from '@/app/components/ui/button/Button'
+import { applyServerErrors } from '@/app/lib/form'
 import { Dialog } from '@/app/components/ui/dialog/Dialog'
-import { DialogHeader, DialogContent, DialogFooter } from '@/app/components/ui/dialog/DialogParts'
-import { useProducts } from '@/app/lib/hooks/useProduct'
-import { toast } from 'sonner'
+import { DialogContent, DialogFooter, DialogHeader } from '@/app/components/ui/dialog/DialogParts'
 
-const productSchema = z.object({
+const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   price: z.string().min(1, 'Price is required'),
-  description: z.string().nullable(),
-  category_id: z.number('Category is required'),
-  stock_qty: z.coerce.number().nullable(),
+  description: z.string().optional(),
+  category_id: z.coerce.number().min(1, 'Category is required'),
+  stock_qty: z.coerce.number().optional(),
 })
 
-type ProductFormData = z.infer<typeof productSchema>
+type FormData = z.infer<typeof schema>
 
 interface Props {
   product?: ProductResponse
-  onSaved?: () => void
   trigger?: React.ReactNode
 }
 
-export default function ProductModal({ product, onSaved, trigger }: Props) {
+export default function ProductModal({ product, trigger }: Props) {
   const [open, setOpen] = useState(false)
   const isEdit = !!product
 
@@ -48,47 +49,34 @@ export default function ProductModal({ product, onSaved, trigger }: Props) {
     setError,
     reset,
     formState: { errors },
-  } = useForm<ProductFormData>({
-    //@ts-ignore
-    resolver: zodResolver(productSchema),
+  } = useForm<FormData>({
+    resolver: zodResolver(schema) as Resolver<FormData>,
     values: product
       ? {
           name: product.name,
           price: product.price,
           description: product.description ?? '',
           category_id: product.category_id,
-          stock_qty: product.stock_qty ?? '',
+          stock_qty: product.stock_qty ?? 0,
         }
       : { name: '', price: '', description: '', category_id: 0, stock_qty: 0 },
   })
 
-  const { saveProduct } = useProducts()
+  const { mutate, isPending } = useProducts().saveProduct
 
-  const { mutate, isPending } = saveProduct
-  function onSubmit(data: ProductFormData) {
+  function onSubmit(data: FormData) {
     mutate(
       { slug: product?.slug, data },
       {
         onSuccess: () => {
           reset()
           setOpen(false)
-          onSaved?.()
         },
-        //@ts-ignore
         onError: (err: any) => {
           if (err?.status === 422 && err?.response?.errors) {
-            Object.entries(err.response.errors).forEach(([field, messages]) => {
-              if (field in productSchema.shape) {
-                setError(field as keyof ProductFormData, {
-                  type: 'server',
-                  //@ts-ignore
-                  message: messages[0],
-                })
-              }
-            })
+            applyServerErrors(err.response.errors, setError, Object.keys(schema.shape))
             return
           }
-
           toast.error(err?.message ?? 'Something went wrong')
         },
       }
