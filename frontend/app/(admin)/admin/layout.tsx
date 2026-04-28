@@ -58,7 +58,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </Link>
               )
             })}
-            <Button variant="ghost" onClick={handleLogout}>
+
+            <div className="p-3 text-sm">
+              <Link href={'/'}>Home</Link>
+            </div>
+            <Button className="text-sm px-0" variant="ghost" onClick={handleLogout}>
               Logout
             </Button>
           </nav>
