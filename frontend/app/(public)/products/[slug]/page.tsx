@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: { params: PageParams }) {
           <p className="text-sm">No reviews yet.</p>
         )}
       </div>
-      <div className="flex flex-col gap-3 md:w-1/3">
+      <div className="flex flex-col gap-3 md:w-1/3 md:pl-4">
         <h1 className="text-3xl italic underline font-light">Leave a review</h1>
         <ReviewForm productId={product.id} />
       </div>

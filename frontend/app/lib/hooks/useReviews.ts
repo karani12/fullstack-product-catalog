@@ -16,6 +16,7 @@ export function useReviews() {
       clientFetch<ApiResponse<ReviewResponse[]>>('/api/v1/admin/reviews').then(
         (res) => res?.data ?? []
       ),
+    staleTime: 0,
   })
 
   const toggleApproval = useMutation({
@@ -33,7 +34,6 @@ export function useReviews() {
       return { previous }
     },
     onSuccess: (_, { next }) => {
-      queryClient.invalidateQueries({ queryKey: ['reviews'] })
       toast.success(next ? 'Review approved' : 'Review rejected')
     },
     onError: (_, __, context) => {

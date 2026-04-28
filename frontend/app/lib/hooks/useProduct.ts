@@ -16,6 +16,7 @@ export function useProducts() {
   const getProducts = useQuery({
     queryKey: ['products'],
     queryFn: () => clientGetProducts().then((res) => res?.data ?? []),
+    staleTime: 0,
   })
 
   const togglePublish = useMutation({
