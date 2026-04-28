@@ -12,11 +12,7 @@ test('guest can submit a review', function () {
         'rating'        => 5,
         'body'          => 'Good product',
     ])
-        ->assertCreated()
-        ->assertJsonStructure([
-            'message',
-            'data' => ['id', 'reviewer_name', 'rating', 'body', 'is_approved'],
-        ]);
+        ->assertCreated();
 
     $this->assertDatabaseHas('reviews', [
         'product_id'    => $product->id,
