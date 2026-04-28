@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -46,6 +47,7 @@ export default function ReviewForm({ productId }: { productId: number }) {
       })
       setSubmitted(true)
       toast.success('Review submitted! It will appear after approval.')
+       
     } catch (e: any) {
       if (e?.status === 422 && e?.response?.errors) {
         applyServerErrors(e.response.errors, setError)

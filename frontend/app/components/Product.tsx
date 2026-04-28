@@ -26,7 +26,7 @@ const schema = z.object({
   stock_qty: z.coerce.number().optional(),
 })
 
-type FormData = z.infer<typeof schema>
+export type FormData = z.infer<typeof schema>
 
 interface Props {
   product?: ProductResponse
@@ -72,6 +72,8 @@ export default function ProductModal({ product, trigger }: Props) {
           reset()
           setOpen(false)
         },
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (err: any) => {
           if (err?.status === 422 && err?.response?.errors) {
             applyServerErrors(err.response.errors, setError, Object.keys(schema.shape))
