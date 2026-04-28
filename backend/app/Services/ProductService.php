@@ -18,8 +18,7 @@ class ProductService
             return Cache::remember($key, 60, fn() => $query->paginate(10, ['*'], 'page', $page));
         }
 
-        $key = "products.all.{$category}";
-        return Cache::remember($key, 60, fn() => $query->get());
+        return Cache::remember("products.all", 60, fn() => $query->get());
     }
 
     public function find(Product $product)
@@ -39,7 +38,7 @@ class ProductService
         $product = Product::create($data);
         $product->load('category');
 
-        Cache::forget('products.all.page.1');
+        Cache::forget('products.all');
         Cache::forget('products.published.page.1');
 
         return $product;
@@ -48,8 +47,8 @@ class ProductService
     public function update(Product $product, array $data): Product
     {
         $product->update($data);
-        Cache::forget('products.all.page.1');
-        Cache::forget('products.published.page.1');
+        Cache::forget('products.all');
+        Cache::forget('products.published.page.0');
         Cache::forget("products.detail.{$product->slug}");
 
         return $product;
@@ -57,7 +56,7 @@ class ProductService
 
     public function delete(Product $product): void
     {
-        Cache::forget('products.all.page.1');
+        Cache::forget('products.all');
         Cache::forget('products.published.page.1');
         Cache::forget("products.detail.{$product->slug}");
         $product->delete();

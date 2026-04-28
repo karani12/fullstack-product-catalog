@@ -44,8 +44,6 @@ export function useProducts() {
     mutationFn: ({ slug, data }: { slug?: string; data: any }) =>
       slug ? clientUpdateProduct(slug, data) : clientCreateProduct(data),
     onSuccess: (res, { slug }) => {
-      //update the data for optimistic updates on success to ensure the layout maintains the same way.
-      //otherwise we could invalidate the cache which may cause layout shifts
       queryClient.setQueryData<ProductResponse[]>(['products'], (prev) => {
         if (!prev || !res?.data) return prev
         if (slug) {
