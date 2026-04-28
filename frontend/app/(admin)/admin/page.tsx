@@ -6,6 +6,7 @@ import { ConfirmToggleAction } from '@/app/components/ConfirmToggleAction'
 import { useProducts } from '@/app/lib/hooks/useProduct'
 import { Spinner } from '@/app/components/ui/spinner/Spinner'
 import { PencilIcon } from '@heroicons/react/24/outline'
+import { Rating } from '@/app/components/ui/rating/Rating'
 
 export default function AdminProductsPage() {
   const { getProducts, togglePublish, deleteProduct } = useProducts()
@@ -31,6 +32,16 @@ export default function AdminProductsPage() {
               key: 'category',
               label: 'Category',
               render: (p) => p.category?.name ?? '-',
+            },
+            {
+              key: 'stock_qty',
+              label: 'Stock',
+              render: (p) => p.stock_qty ?? '-',
+            },
+            {
+              key: 'average_rating',
+              label: 'Rating',
+              render: (r) => <Rating rating={r.average_rating} />,
             },
             {
               key: 'is_published',

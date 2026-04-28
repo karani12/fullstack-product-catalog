@@ -4,6 +4,7 @@ import { DeleteAction } from '@/app/components/DeleteAction'
 import { ConfirmToggleAction } from '@/app/components/ConfirmToggleAction'
 import { useReviews } from '@/app/lib/hooks/useReviews'
 import { Spinner } from '@/app/components/ui/spinner/Spinner'
+import { Rating } from '@/app/components/ui/rating/Rating'
 
 export default function AdminReviewsPage() {
   const { reviews, toggleApproval, deleteReview } = useReviews()
@@ -23,7 +24,7 @@ export default function AdminReviewsPage() {
           columns={[
             { key: 'reviewer_name', label: 'Reviewer', sticky: true },
             { key: 'email', label: 'Email' },
-            { key: 'rating', label: 'Rating', render: (r) => `${r.rating}/5` },
+            { key: 'rating', label: 'Rating', render: (r) => <Rating rating={r.rating} /> },
             {
               key: 'body',
               label: 'Review',
