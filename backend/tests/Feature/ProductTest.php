@@ -1,10 +1,9 @@
 <?php
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
-
 
 test('can list paginated products', function () {
     Product::factory()->count(15)->create();
@@ -37,8 +36,8 @@ test('can create product', function () {
 
     $this->postJson('/api/v1/admin/products', [
         'category_id' => $category->id,
-        'name'        => 'Test Product',
-        'price'       => 100,
+        'name' => 'Test Product',
+        'price' => 100,
     ])
         ->assertCreated()
         ->assertJsonStructure([
@@ -67,8 +66,8 @@ test('can update product', function () {
 
     $this->putJson("/api/v1/admin/products/{$product->slug}", [
         'category_id' => $product->category_id,
-        'name'        => 'Updated Name',
-        'price'       => 200,
+        'name' => 'Updated Name',
+        'price' => 200,
     ])
         ->assertOk()
         ->assertJsonPath('data.name', 'Updated Name')

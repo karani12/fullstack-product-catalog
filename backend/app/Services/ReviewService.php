@@ -10,10 +10,9 @@ class ReviewService
     public function list()
     {
         return Cache::remember(
-            "reviews.all",
+            'reviews.all',
             300,
-            fn() =>
-            Review::with('product')
+            fn () => Review::with('product')
                 ->latest()
                 ->paginate(10)
         );
@@ -22,12 +21,12 @@ class ReviewService
     public function create(array $data): Review
     {
         return Review::create([
-            'product_id'    => $data['product_id'],
+            'product_id' => $data['product_id'],
             'reviewer_name' => $data['reviewer_name'],
-            'email'         => $data['email'],
-            'rating'        => $data['rating'],
-            'body'          => $data['body'],
-            'is_approved'   => false,
+            'email' => $data['email'],
+            'rating' => $data['rating'],
+            'body' => $data['body'],
+            'is_approved' => false,
         ]);
     }
 
@@ -36,6 +35,7 @@ class ReviewService
         $review->update($data);
 
         Cache::forget('reviews.all');
+
         return $review->refresh();
     }
 

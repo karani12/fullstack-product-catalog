@@ -8,10 +8,10 @@ use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-
     public function __construct(
         private CategoryService $service
     ) {}
+
     public function index()
     {
         return response()->api(

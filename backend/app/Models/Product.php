@@ -60,6 +60,7 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+
     public function scopePublished(Builder $query): void
     {
         $query->where('is_published', true);
