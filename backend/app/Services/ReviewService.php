@@ -20,6 +20,11 @@ class ReviewService
 
     public function create(array $data): Review
     {
+
+        Cache::forget('reviews.all');
+        Cache::forget('products.all');
+        Cache::forget('products.all');
+
         return Review::create([
             'product_id' => $data['product_id'],
             'reviewer_name' => $data['reviewer_name'],
@@ -34,6 +39,9 @@ class ReviewService
     {
 
         Cache::forget('reviews.all');
+        Cache::forget('products.all');
+        Cache::forget('products.published.page.1');
+
         $review->update($data);
         return $review->refresh();
     }
