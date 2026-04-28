@@ -1,3 +1,5 @@
+import { ApiError } from '@/app/lib/client_fetch'
+
 export async function apiFetch<T>(
   path: string,
   options: RequestInit & { revalidate?: number | false } = {}
@@ -14,7 +16,12 @@ export async function apiFetch<T>(
     next: { revalidate: revalidate ?? false },
   })
 
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  let body = null
+  try {
+    body = await res.json()
+  } catch {}
 
-  return res.json()
+  if (!res.ok) throw new ApiError(res.status, body ?? undefined)
+
+  return body as T
 }
