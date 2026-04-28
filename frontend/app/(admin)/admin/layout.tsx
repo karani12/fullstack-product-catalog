@@ -5,14 +5,17 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { removeToken } from '@/app/lib/api/auth'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const queryClient = useQueryClient()
 
   function handleLogout() {
     removeToken()
+    queryClient.removeQueries({ queryKey: ['me'] })
     router.push('/login')
   }
 
