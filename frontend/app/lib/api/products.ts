@@ -15,6 +15,12 @@ export function getProducts(page = 1, category?: string | null) {
   )
 }
 
+export function getFeatured(page = 1) {
+  return apiFetch<ApiResponse<ProductResponse[]>>(`/api/v1/products?page=${page}`, {
+    cache: 'force-cache',
+  })
+}
+
 export function getProduct(slug: string) {
   return apiFetch<ApiResponse<ProductResponse>>(`/api/v1/products/${slug}`, { revalidate: 60 })
 }

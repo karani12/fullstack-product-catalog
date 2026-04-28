@@ -1,11 +1,10 @@
 import ProductCard from '@/app/components/ProductCard'
-import { getProducts } from '@/app/lib/api/products'
+import { getFeatured } from '@/app/lib/api/products'
 
-//just get the first page and assume its featured products
 export const dynamic = 'force-static'
 
 export default async function Products() {
-  const res = await getProducts(1, null)
+  const res = await getFeatured(1)
   const data = res.data ?? []
 
   return (
