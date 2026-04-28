@@ -110,6 +110,11 @@ For **SSG**, **SSR**, **CSR** and **ISR** might be where I spent most of the tim
 - directives are not meant to be put on every page
 - client side fetch and server side fetch may use different apis that are not available on both
 - It advises on ttl decsions based on what you chose depending on business decisions, data volatility and perf trade offs(very fast for SSG + ISR - instant page loads)
+The decisions for SSG is mostly advised by how often the data changes. The caching strategy is discussed in the backend readme whenre I explain what are the variables that make up caching stratgies. 
+
+For example for products, I ended up with  a more dynamic page due to its changes that depend on url params which are dynamic.
+The featured section is forced static and remains unchanged till the next build.
+Category will have revalidation every 5min since they are not volatile.
 
 
 
