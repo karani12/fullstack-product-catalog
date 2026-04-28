@@ -4,14 +4,14 @@ This a laravel application that provides a **REST** api to Duka frontend. It han
 
 ## Tech stack
 
-- PHP 8.2+
+- PHP 8.4+
 - Laravel 12 + (Laravel 13 is too new for me at the moment but will catchup soon)
 - Pest 3+(prefer this to phpuinit - I can use both)
 
 
 ## Requirements
 
-- PHP 8.2+
+- PHP 8.4+
 - Composer 2.9.5
 - Enabled extensions for php(pdo_psql, php-redis  etc)
 
@@ -43,7 +43,19 @@ CACHE_STORE=redis
   php artisan db:seed
   php artisan serve 
 ```
+
+The seeded admin user is 
+
+```
+email: testuser@example.com
+password: password
+```
+
+You can login at the `/login` route but if you try to access login you will be redirectd.
 ## Scripts
+
+> Note: Before running tests refer to `phpunit.xml` I used a wfd_test database in testing but those values can be changed to something you. You can opt for sqlite etc.
+
 ```
 php artisan test
 composer pint
@@ -73,7 +85,7 @@ composer pint
 
 ### Macros
 
-I used a macro in `AppServiceProvider` to build a nice and standardised api respponse body. This allows me to achieve a unified api response that is the same. 
+I used a macro in `AppServiceProvider` to build a standardised api respponse body. This allows me to achieve a unified api response that is the same. 
 
 With this macro, i also changed the format and structure of errors by `FormRequests` by building a BaseRequest that returns 422 errors in the standard format.
 
@@ -83,7 +95,7 @@ I also updated the errors default error messages to exceptions for 404 and 401 t
 
 I opted for services in order to support controllers in a uniform way. For example I have `ProductController` and `AdminProdductController` which would basically fit in one controller.
 
-But to ensure that I follow DRY principles, I added a service layer to handle logic related tasks while the controller focuses on request and response ensuring that validations etc remain consistent.
+To  ensure that I follow DRY principles, I added a service layer to handle logic related tasks while the controller focuses on request and response ensuring that validations etc remain consistent.
 
 ### Caching
 What advises Caching strategy is data volatility,performance, business , freshness etc.
