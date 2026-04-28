@@ -7,12 +7,14 @@ This a laravel application that provides a **REST** api to Duka frontend. It han
 - PHP 8.4+
 - Laravel 12 + (Laravel 13 is too new for me at the moment but will catchup soon)
 - Pest 3+(prefer this to phpuinit - I can use both)
+- redis
 
 
 ## Requirements
 
 - PHP 8.4+
 - Composer 2.9.5
+- redis
 - Enabled extensions for php(pdo_psql, php-redis  etc)
 
 ## Set Up
@@ -20,17 +22,18 @@ This a laravel application that provides a **REST** api to Duka frontend. It han
 ### 1) Configure URL in .env
 
 #### set up database
-
+```
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=wfd
 DB_USERNAME=root
 DB_PASSWORD=password
-
+```
 #### setup cache store
-
+```
 CACHE_STORE=redis
+```
 
 ### 2) Start the backend
 
